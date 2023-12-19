@@ -20,12 +20,13 @@ public class HotelReservationSystem {
             Connection conn= DriverManager.getConnection(url,username,password);
             while(true){
                 System.out.println();
-                System.out.println("HOTEL MANAGEMENT SYSTEM");
+                System.out.println("WELCOME TO HOTEL MANAGEMENT SYSTEM");
                 Scanner sc= new Scanner(System.in);
+
                 System.out.println("1. Reserve a room");
                 System.out.println("2. View Reservation");
                 System.out.println("3. Get room number");
-                System.out.println("4. Upadte reservation");
+                System.out.println("4. Update reservation");
                 System.out.println("5. Delete reservation");
                 System.out.println("0. Exit");
                 System.out.println("Choose an option: ");
@@ -61,21 +62,21 @@ public class HotelReservationSystem {
             throw new RuntimeException(e);
         }
     }
-    private static void reserveRoom(Connection connection, Scanner scanner) {
+    private static void reserveRoom(Connection connection, Scanner sc) {
         try {
             System.out.print("Enter guest name: ");
-            String guestName = scanner.next();
-            scanner.nextLine();
+            String guestName = sc.next();
+            sc.nextLine();
             System.out.print("Enter room number: ");
-            int roomNumber = scanner.nextInt();
+            int roomNumber = sc.nextInt();
             System.out.print("Enter contact number: ");
-            String contactNumber = scanner.next();
+            String contactNumber = sc.next();
 
             String sql = "INSERT INTO reservation (guest_name, room_number, contact_number) " +
                     "VALUES ('" + guestName + "', " + roomNumber + ", '" + contactNumber + "')";
 
-            try (Statement statement = connection.createStatement()) {
-                int affectedRows = statement.executeUpdate(sql);
+            try (Statement smst = connection.createStatement()) {
+                int affectedRows = smst.executeUpdate(sql);
 
                 if (affectedRows > 0) {
                     System.out.println("Reservation successful!");
@@ -91,8 +92,8 @@ public class HotelReservationSystem {
     private static void viewReservations(Connection conn) throws SQLException {
         String sql = "SELECT reservation_id, guest_name, room_number, contact_number, reservation_date FROM reservation";
 
-        try (Statement statement = conn.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
+        try (Statement smst = conn.createStatement();
+             ResultSet resultSet = smst.executeQuery(sql)) {
 
             System.out.println("Current Reservations:");
             System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
@@ -126,8 +127,8 @@ public class HotelReservationSystem {
                     "WHERE reservation_id = " + reservationId +
                     " AND guest_name = '" + guestName + "'";
 
-            try (Statement statement = conn.createStatement();
-                 ResultSet resultSet = statement.executeQuery(sql)) {
+            try (Statement smst = conn.createStatement();
+                 ResultSet resultSet = smst.executeQuery(sql)) {
 
                 if (resultSet.next()) {
                     int roomNumber = resultSet.getInt("room_number");
@@ -164,8 +165,8 @@ public class HotelReservationSystem {
                     "contact_number = '" + newContactNumber + "' " +
                     "WHERE reservation_id = " + reservationId;
 
-            try (Statement statement = conn.createStatement()) {
-                int affectedRows = statement.executeUpdate(sql);
+            try (Statement smst = conn.createStatement()) {
+                int affectedRows = smst.executeUpdate(sql);
 
                 if (affectedRows > 0) {
                     System.out.println("Reservation updated successfully!");
